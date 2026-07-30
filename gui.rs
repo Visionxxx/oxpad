@@ -3,6 +3,11 @@ use eframe::egui;
 use std::io::Write as _;
 use std::path::PathBuf;
 
+// The app name, used in the title bar, About dialog and window setup.
+// (Kept in one place so a rename touches only this line and Cargo.toml.)
+const APP_NAME: &str = "Rustpad";
+const APP_REPO: &str = "https://github.com/Visionxxx/rustpad";
+
 fn editor_id() -> egui::Id {
     egui::Id::new("rustpad_editor")
 }
@@ -27,7 +32,7 @@ fn main() -> eframe::Result {
         ..Default::default()
     };
     eframe::run_native(
-        "Rustpad",
+        APP_NAME,
         opts,
         Box::new(|cc| {
             configure_focus(&cc.egui_ctx);
@@ -157,6 +162,7 @@ struct Notepad {
     // events for the editor, injected at the start of the next frame
     // (events pushed after the editor has rendered would otherwise be lost)
     pending_events: Vec<egui::Event>,
+    show_about: bool,
 }
 
 const MAX_RECENT: usize = 8;
@@ -193,6 +199,7 @@ impl Notepad {
             scroll_offset: egui::Vec2::ZERO,
             last_selection: (0, 0),
             pending_events: Vec::new(),
+            show_about: false,
         };
         pad.load_from_disk(path);
         pad
@@ -864,7 +871,7 @@ impl Notepad {
 
         // window title like Notepad: "file.txt* – Rustpad"
         let star = if self.is_dirty() { "*" } else { "" };
-        let title = format!("{}{star} – Rustpad", self.file_name());
+        let title = format!("{}{star} – {APP_NAME}", self.file_name());
         if title != self.last_title {
             // only on change: sending a viewport command forces a repaint,
             // and doing it every frame would keep the app repainting forever
@@ -1015,8 +1022,41 @@ impl Notepad {
                         }
                     });
                 });
+                ui.menu_button("Help", |ui| {
+                    if ui.button(format!("About {APP_NAME}…")).clicked() {
+                        self.show_about = true;
+                    }
+                });
             });
         });
+
+        // ---------- about ----------
+        if self.show_about {
+            let mut open = self.show_about;
+            egui::Window::new(format!("About {APP_NAME}"))
+                .collapsible(false)
+                .resizable(false)
+                .anchor(egui::Align2::CENTER_CENTER, [0.0, 0.0])
+                .open(&mut open)
+                .show(&ctx, |ui| {
+                    ui.vertical_centered(|ui| {
+                        ui.add_space(4.0);
+                        ui.heading(APP_NAME);
+                        ui.label(format!("Version {}", env!("CARGO_PKG_VERSION")));
+                        ui.add_space(8.0);
+                        ui.label("A simple Notepad-style text editor written in Rust.");
+                        ui.hyperlink(APP_REPO);
+                        ui.add_space(8.0);
+                        ui.label("© 2026 Glenn Roar Høye · MIT license");
+                        ui.weak("Built with egui & eframe");
+                        ui.add_space(4.0);
+                        if ui.button("Close").clicked() {
+                            self.show_about = false;
+                        }
+                    });
+                });
+            self.show_about &= open;
+        }
 
         // ---------- the file changed on disk ----------
         if self.disk_changed {
@@ -1592,5 +1632,18 @@ mod ui_tests {
             }
         }
         assert_eq!(copied.as_deref(), Some("wonderful"), "Copy should copy the selection");
+    }
+
+    // Help → About opens the dialog with the current version
+    #[test]
+    fn about_dialog_shows_version() {
+        let mut h = harness("");
+        h.run();
+        click_label(&mut h, "Help");
+        click_label(&mut h, &format!("About {APP_NAME}…"));
+        h.run();
+        h.get_by_label(&format!("Version {}", env!("CARGO_PKG_VERSION")));
+        click_label(&mut h, "Close");
+        assert!(!h.state().show_about);
     }
 }

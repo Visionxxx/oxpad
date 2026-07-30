@@ -181,6 +181,7 @@ struct Notepad {
     // (events pushed after the editor has rendered would otherwise be lost)
     pending_events: Vec<egui::Event>,
     show_about: bool,
+    started: bool,
 }
 
 const MAX_RECENT: usize = 8;
@@ -218,6 +219,7 @@ impl Notepad {
             last_selection: (0, 0),
             pending_events: Vec::new(),
             show_about: false,
+            started: false,
         };
         pad.load_from_disk(path);
         pad
@@ -853,6 +855,11 @@ impl eframe::App for Notepad {
 impl Notepad {
     fn app_ui(&mut self, ui: &mut egui::Ui) {
         let ctx = ui.ctx().clone();
+        // start with the editor focused so you can type right away
+        if !self.started {
+            self.started = true;
+            ctx.memory_mut(|m| m.request_focus(editor_id()));
+        }
         // deliver queued editor events before the editor renders this frame
         if !self.pending_events.is_empty() {
             ctx.memory_mut(|m| m.request_focus(editor_id()));
@@ -1669,5 +1676,15 @@ mod ui_tests {
         h.get_by_label(&format!("Version {}", env!("CARGO_PKG_VERSION")));
         click_label(&mut h, "Close");
         assert!(!h.state().show_about);
+    }
+
+    // A fresh window must accept typing immediately (editor focused at start)
+    #[test]
+    fn typing_works_without_clicking_first() {
+        let mut h = harness("");
+        h.run();
+        h.event(egui::Event::Text("hello".into()));
+        h.run();
+        assert_eq!(h.state().text, "hello");
     }
 }

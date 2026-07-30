@@ -1,7 +1,24 @@
 # Changelog
 
-All notable changes to Rustpad are documented in this file.
+All notable changes to Oxpad are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [0.3.0] – 2026-07-30
+
+### Changed
+
+- **Renamed the project from Rustpad to Oxpad** ("oxide" + "pad" — rust is
+  iron oxide, after all) to avoid colliding with the well-known
+  collaborative editor of the same name. Binaries are now `oxpad` and
+  `oxpad-gui`; settings from the old name are migrated automatically on
+  first start.
+
+### Added
+
+- **Windows edition**: `oxpad-gui.exe` and `oxpad.exe` built by CI and
+  attached to releases as a zip. Runs as a proper GUI app (no console
+  window) with the app icon embedded in the executable.
+- **Help → About dialog** with version, license and a link to the project.
 
 ## [0.2.3] – 2026-07-19
 

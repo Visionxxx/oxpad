@@ -1,19 +1,19 @@
 [package]
-name = "rustpad"
-version = "0.2.3"
+name = "oxpad"
+version = "0.3.0"
 edition = "2021"
 description = "A simple Notepad-style text editor with terminal and GUI editions"
 license = "MIT"
-repository = "https://github.com/Visionxxx/rustpad"
+repository = "https://github.com/Visionxxx/oxpad"
 readme = "README.md"
 authors = ["Glenn Roar Høye <glenn.roar.hoye@gmail.com>"]
 
 [[bin]]
-name = "rustpad"
+name = "oxpad"
 path = "main.rs"
 
 [[bin]]
-name = "rustpad-gui"
+name = "oxpad-gui"
 path = "gui.rs"
 
 [dependencies]
@@ -33,24 +33,27 @@ panic = "abort"
 [dev-dependencies]
 egui_kittest = { version = "0.35", default-features = false }
 
+[build-dependencies]
+winresource = "0.1.31"
+
 # Debian/Ubuntu package (built with `cargo deb`)
 [package.metadata.deb]
 maintainer = "Glenn Roar Høye <glenn.roar.hoye@gmail.com>"
 copyright = "2026 Glenn Roar Høye"
 extended-description = """A lightweight Notepad-style text editor written in Rust. \
-Includes a GUI edition (rustpad-gui) with find & replace, line numbers, \
-Markdown preview, themes and session persistence, plus a terminal edition (rustpad)."""
+Includes a GUI edition (oxpad-gui) with find & replace, line numbers, \
+Markdown preview, themes and session persistence, plus a terminal edition (oxpad)."""
 section = "editors"
 priority = "optional"
 assets = [
-    ["target/release/rustpad", "usr/bin/", "755"],
-    ["target/release/rustpad-gui", "usr/bin/", "755"],
-    ["assets/rustpad.desktop", "usr/share/applications/", "644"],
-    ["assets/rustpad.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
-    ["assets/rustpad-48.png", "usr/share/icons/hicolor/48x48/apps/rustpad.png", "644"],
-    ["assets/rustpad-64.png", "usr/share/icons/hicolor/64x64/apps/rustpad.png", "644"],
-    ["assets/rustpad-128.png", "usr/share/icons/hicolor/128x128/apps/rustpad.png", "644"],
-    ["assets/rustpad-256.png", "usr/share/icons/hicolor/256x256/apps/rustpad.png", "644"],
-    ["LICENSE", "usr/share/doc/rustpad/", "644"],
-    ["README.md", "usr/share/doc/rustpad/", "644"],
+    ["target/release/oxpad", "usr/bin/", "755"],
+    ["target/release/oxpad-gui", "usr/bin/", "755"],
+    ["assets/oxpad.desktop", "usr/share/applications/", "644"],
+    ["assets/oxpad.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
+    ["assets/oxpad-48.png", "usr/share/icons/hicolor/48x48/apps/oxpad.png", "644"],
+    ["assets/oxpad-64.png", "usr/share/icons/hicolor/64x64/apps/oxpad.png", "644"],
+    ["assets/oxpad-128.png", "usr/share/icons/hicolor/128x128/apps/oxpad.png", "644"],
+    ["assets/oxpad-256.png", "usr/share/icons/hicolor/256x256/apps/oxpad.png", "644"],
+    ["LICENSE", "usr/share/doc/oxpad/", "644"],
+    ["README.md", "usr/share/doc/oxpad/", "644"],
 ]

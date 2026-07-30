@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=Rustpad
+Name=Oxpad
 Comment=A simple notepad written in Rust
-Exec=rustpad-gui %f
-Icon=rustpad
+Exec=oxpad-gui %f
+Icon=oxpad
 Terminal=false
 Categories=Utility;TextEditor;
 MimeType=text/plain;text/markdown;
-StartupWMClass=rustpad-gui
+StartupWMClass=oxpad-gui

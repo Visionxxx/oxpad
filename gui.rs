@@ -1,15 +1,18 @@
-// Rustpad GUI – a Notepad-style text editor (eframe/egui)
+// Oxpad GUI – a Notepad-style text editor (eframe/egui)
+// On Windows, run as a GUI app instead of opening a console window behind us.
+#![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
+
 use eframe::egui;
 use std::io::Write as _;
 use std::path::PathBuf;
 
 // The app name, used in the title bar, About dialog and window setup.
 // (Kept in one place so a rename touches only this line and Cargo.toml.)
-const APP_NAME: &str = "Rustpad";
-const APP_REPO: &str = "https://github.com/Visionxxx/rustpad";
+const APP_NAME: &str = "Oxpad";
+const APP_REPO: &str = "https://github.com/Visionxxx/oxpad";
 
 fn editor_id() -> egui::Id {
-    egui::Id::new("rustpad_editor")
+    egui::Id::new("oxpad_editor")
 }
 
 // byte index of char number i (same trick as in main.rs)
@@ -23,6 +26,7 @@ fn lower(c: char) -> char {
 }
 
 fn main() -> eframe::Result {
+    migrate_old_settings();
     let file = std::env::args().nth(1).map(PathBuf::from);
     let opts = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
@@ -39,6 +43,20 @@ fn main() -> eframe::Result {
             Ok(Box::new(Notepad::new(file).restore(cc.storage)))
         }),
     )
+}
+
+// Carry settings over from before the app was renamed (pre-0.3 "Rustpad").
+fn migrate_old_settings() {
+    if let (Some(old), Some(new)) = (eframe::storage_dir("Rustpad"), eframe::storage_dir(APP_NAME)) {
+        if old.is_dir() && !new.exists() {
+            let _ = std::fs::create_dir_all(&new);
+            if let Ok(entries) = std::fs::read_dir(&old) {
+                for e in entries.flatten() {
+                    let _ = std::fs::copy(e.path(), new.join(e.file_name()));
+                }
+            }
+        }
+    }
 }
 
 // A little rust-colored notepad icon (rounded square with text lines),
@@ -187,7 +205,7 @@ impl Notepad {
             show_status: true,
             font_size: 14.0,
             show_line_numbers: true,
-            show_md: std::env::var_os("RUSTPAD_MD").is_some(),
+            show_md: std::env::var_os("OXPAD_MD").is_some(),
             md_cache: Default::default(),
             drag_scroll: egui::Vec2::ZERO,
             last_title: String::new(),
@@ -290,7 +308,7 @@ impl Notepad {
         let (text, encoding) = match &path {
             Some(p) => match read_text(p) {
                 Ok(t) => t,
-                // a path that doesn't exist yet is a new file (e.g. `rustpad-gui new.txt`)
+                // a path that doesn't exist yet is a new file (e.g. `oxpad-gui new.txt`)
                 Err(e) if e.kind() == std::io::ErrorKind::NotFound => (String::new(), "UTF-8"),
                 Err(e) => {
                     self.status_msg = format!("Could not open {}: {e}", p.display());
@@ -345,6 +363,12 @@ impl Notepad {
         }
     }
 
+    #[cfg(target_os = "windows")]
+    fn print(&mut self) {
+        self.status_msg = "Printing is not supported on Windows yet".into();
+    }
+
+    #[cfg(not(target_os = "windows"))]
     fn print(&mut self) {
         let r = std::process::Command::new("lp")
             .stdin(std::process::Stdio::piped())
@@ -367,7 +391,7 @@ impl Notepad {
             return true;
         }
         match rfd::MessageDialog::new()
-            .set_title("Rustpad")
+            .set_title(APP_NAME)
             .set_description(format!("Do you want to save changes to {}?", self.file_name()))
             .set_buttons(rfd::MessageButtons::YesNoCancel)
             .show()
@@ -869,7 +893,7 @@ impl Notepad {
             }
         }
 
-        // window title like Notepad: "file.txt* – Rustpad"
+        // window title like Notepad: "file.txt* – Oxpad"
         let star = if self.is_dirty() { "*" } else { "" };
         let title = format!("{}{star} – {APP_NAME}", self.file_name());
         if title != self.last_title {
@@ -1310,7 +1334,7 @@ mod tests {
 
     #[test]
     fn latin1_files_open_with_fallback_instead_of_empty() {
-        let f = std::env::temp_dir().join("rustpad_test_latin1.txt");
+        let f = std::env::temp_dir().join("oxpad_test_latin1.txt");
         // "blåbær" as ISO-8859-1 bytes — invalid UTF-8
         std::fs::write(&f, [b'b', b'l', 0xE5, b'b', 0xE6, b'r']).unwrap();
         let p = Notepad::new(Some(f.clone()));
@@ -1322,7 +1346,7 @@ mod tests {
 
     #[test]
     fn missing_file_is_a_new_empty_document() {
-        let f = std::env::temp_dir().join("rustpad_does_not_exist/new.txt");
+        let f = std::env::temp_dir().join("oxpad_does_not_exist/new.txt");
         let p = Notepad::new(Some(f.clone()));
         assert_eq!(p.text, "");
         assert_eq!(p.path, Some(f));

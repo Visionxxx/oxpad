@@ -19,7 +19,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: Run tests
-        run: cargo test --bin rustpad-gui
+        run: cargo test --bin oxpad-gui
 
       - name: Build release binaries
         run: cargo build --release
@@ -37,4 +37,31 @@ jobs:
         with:
           files: |
             target/debian/*.deb
-            Rustpad-*-x86_64.AppImage
+            Oxpad-*-x86_64.AppImage
+
+  windows-packages:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Run tests
+        run: cargo test --bin oxpad-gui
+
+      - name: Build release binaries
+        run: cargo build --release
+
+      - name: Package zip
+        shell: pwsh
+        run: >
+          Compress-Archive
+          -Path target/release/oxpad-gui.exe, target/release/oxpad.exe, LICENSE, README.md
+          -DestinationPath "Oxpad-${{ github.ref_name }}-windows-x86_64.zip"
+
+      - name: Upload to the GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Oxpad-*-windows-x86_64.zip

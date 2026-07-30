@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
-# Build Rustpad-<version>-x86_64.AppImage from the release binary.
+# Build Oxpad-<version>-x86_64.AppImage from the release binary.
 # Used both locally and by the GitHub release workflow.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 VERSION=$(grep -m1 '^version' Cargo.toml | cut -d'"' -f2)
-APPDIR=target/appimage/Rustpad.AppDir
+APPDIR=target/appimage/Oxpad.AppDir
 TOOL=target/appimage/appimagetool
 
 rm -rf "$APPDIR"
 mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/share/icons/hicolor/256x256/apps"
 
-cp target/release/rustpad-gui "$APPDIR/usr/bin/"
-cp assets/rustpad.desktop "$APPDIR/"
-cp assets/rustpad-256.png "$APPDIR/usr/share/icons/hicolor/256x256/apps/rustpad.png"
-cp assets/rustpad-256.png "$APPDIR/rustpad.png"
-cp assets/rustpad-256.png "$APPDIR/.DirIcon"
+cp target/release/oxpad-gui "$APPDIR/usr/bin/"
+cp assets/oxpad.desktop "$APPDIR/"
+cp assets/oxpad-256.png "$APPDIR/usr/share/icons/hicolor/256x256/apps/oxpad.png"
+cp assets/oxpad-256.png "$APPDIR/oxpad.png"
+cp assets/oxpad-256.png "$APPDIR/.DirIcon"
 
 cat > "$APPDIR/AppRun" << 'EOF'
 #!/bin/sh
 HERE=$(dirname "$(readlink -f "$0")")
-exec "$HERE/usr/bin/rustpad-gui" "$@"
+exec "$HERE/usr/bin/oxpad-gui" "$@"
 EOF
 chmod +x "$APPDIR/AppRun"
 
@@ -31,5 +31,5 @@ if [ ! -x "$TOOL" ]; then
 fi
 
 # --appimage-extract-and-run works without FUSE (containers, CI)
-ARCH=x86_64 "$TOOL" --appimage-extract-and-run "$APPDIR" "Rustpad-${VERSION}-x86_64.AppImage"
-echo "Built Rustpad-${VERSION}-x86_64.AppImage"
+ARCH=x86_64 "$TOOL" --appimage-extract-and-run "$APPDIR" "Oxpad-${VERSION}-x86_64.AppImage"
+echo "Built Oxpad-${VERSION}-x86_64.AppImage"

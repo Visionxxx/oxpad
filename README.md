@@ -1,9 +1,9 @@
-# Rustpad
+# Oxpad
 
 A simple notepad written in Rust – in two flavors:
 
-- **`rustpad`** – terminal version (crossterm), minimal and fast
-- **`rustpad-gui`** – graphical Notepad-style version (eframe/egui)
+- **`oxpad`** – terminal version (crossterm), minimal and fast
+- **`oxpad-gui`** – graphical Notepad-style version (eframe/egui)
 
 ## Features (GUI)
 
@@ -37,12 +37,12 @@ The terminal version uses ^S=save, ^P=markdown preview, ^Q=quit.
 cargo install --path .
 ```
 
-Installs both `rustpad` and `rustpad-gui` to `~/.cargo/bin`.
+Installs both `oxpad` and `oxpad-gui` to `~/.cargo/bin`.
 
-Run with an optional file name: `rustpad-gui notes.md`
+Run with an optional file name: `oxpad-gui notes.md`
 
 ## Tests
 
 ```sh
-cargo test --bin rustpad-gui
+cargo test --bin oxpad-gui
 ```

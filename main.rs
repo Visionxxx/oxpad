@@ -1,4 +1,4 @@
-// Rustpad – terminal notepad for txt/md/ini etc. with md preview (^P)
+// Oxpad – terminal notepad for txt/md/ini etc. with md preview (^P)
 use crossterm::{cursor::MoveTo,event::{read,Event,KeyCode::*,KeyEventKind,KeyModifiers as M},execute,queue,
 style::{Color::*,Print,ResetColor,SetBackgroundColor as Bg,SetForegroundColor as Fg},terminal::*};
 use std::io::{stdout,Write};
@@ -33,7 +33,7 @@ else{queue!(o,Print(&s))?}
 queue!(o,Fg(if t.starts_with('['){Cyan}else{DarkGrey}),Print(&s))?
 }else{queue!(o,Print(&s))?}}}
 queue!(o,ResetColor)?}
-let st=format!(" RUSTPAD  {}{}  {}:{} {}  ^S=save ^P=md ^Q=quit {}",
+let st=format!(" OXPAD  {}{}  {}:{} {}  ^S=save ^P=md ^Q=quit {}",
 p,if dy{"*"}else{""},cy+1,cx+1,if pv{"[VIEW]"}else{"[EDIT]"},msg);
 let st:String=st.chars().take(w).collect();
 queue!(o,MoveTo(0,h as u16),Bg(White),Fg(Black),Print(format!("{:<1$}",st,w)),ResetColor,

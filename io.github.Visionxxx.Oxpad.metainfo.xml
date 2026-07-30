@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.Visionxxx.Oxpad</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <name>Oxpad</name>
+  <summary>Simple Notepad-style text editor</summary>
+
+  <developer id="io.github.visionxxx">
+    <name>Glenn Roar Høye</name>
+  </developer>
+
+  <description>
+    <p>
+      Oxpad is a lightweight, no-nonsense notepad written in Rust. It opens
+      instantly, stays out of your way and remembers your settings between
+      sessions.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Find and replace with match counter and highlighting of every match</li>
+      <li>Line numbers, word wrap and adjustable font size</li>
+      <li>Markdown preview</li>
+      <li>Light and dark themes</li>
+      <li>Recent files, drag-and-drop and detection of files changed on disk</li>
+      <li>Opens legacy Latin-1 text files correctly, always saves UTF-8</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">io.github.Visionxxx.Oxpad.desktop</launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Editing a Markdown document with line numbers</caption>
+      <image>https://raw.githubusercontent.com/Visionxxx/oxpad/main/assets/screenshot.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://github.com/Visionxxx/oxpad</url>
+  <url type="bugtracker">https://github.com/Visionxxx/oxpad/issues</url>
+  <url type="vcs-browser">https://github.com/Visionxxx/oxpad</url>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#f4d9cb</color>
+    <color type="primary" scheme_preference="dark">#5c2107</color>
+  </branding>
+
+  <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="0.3.1" date="2026-07-30">
+      <description>
+        <p>Flathub packaging and AppStream metadata.</p>
+      </description>
+    </release>
+    <release version="0.3.0" date="2026-07-30">
+      <description>
+        <p>Renamed from Rustpad to Oxpad. Added a Windows edition and an About dialog.</p>
+      </description>
+    </release>
+    <release version="0.2.3" date="2026-07-19">
+      <description>
+        <p>Right-click context menu; scroll wheel works while selecting text.</p>
+      </description>
+    </release>
+  </releases>
+</component>

@@ -3,6 +3,13 @@
 All notable changes to Oxpad are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.1] – 2026-07-30
+
+### Added
+
+- Flathub packaging: AppStream metadata, screenshot and a flatpak manifest
+  with vendored cargo sources (`packaging/flathub/`).
+
 ## [0.3.0] – 2026-07-30
 
 ### Changed
